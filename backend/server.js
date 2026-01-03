@@ -1,93 +1,3 @@
-// // Import necessary packages
-// import express from "express";
-// import axios from "axios";
-// import cors from "cors";
-// import dotenv from "dotenv";
-
-// // Load environment variables from .env file
-// dotenv.config();
-
-// // Initialize the Express app
-// const app = express();
-// const PORT = process.env.PORT || 8000;
-
-// // Get the API key from environment variables
-// const apiKey = process.env.NEWSAPI_API_KEY;
-
-// // Middleware
-// app.use(cors());
-// app.use(express.json());
-
-// // Check if the API key is available
-// if (!apiKey) {
-//   console.error(
-//     "FATAL ERROR: NEWSAPI_API_KEY is not defined in your .env file."
-//   );
-//   process.exit(1); // Exit the process with an error
-// }
-
-// /**
-//  * @route GET /api/news
-//  * @description Fetches top headlines from NewsAPI.org by category or source
-//  * @query {string} category - The news category (e.g., general, bbc)
-//  */
-// app.get("/api/news", async (req, res) => {
-//   // Get the category from the query string, default to 'general'
-//   const query = req.query.category || "general";
-//   let url;
-
-//   if (query === "bbc") {
-//     // User wants BBC news.
-//     // We must use 'sources' and CANNOT use 'country' or 'category'.
-//     url = `https://newsapi.org/v2/top-headlines?sources=bbc-news&apiKey=${apiKey}`;
-//   } else {
-//     // User wants news by category.
-//     url = `https://newsapi.org/v2/top-headlines?country=us&category=${query}&apiKey=${apiKey}`;
-//   }
-
-//   try {
-//     const response = await axios.get(url);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error("Error fetching top headlines:", error.message);
-//     res.status(500).json({ message: "Error fetching news from external API" });
-//   }
-// });
-
-// /**
-//  * NEW: @route GET /api/search
-//  * @description Fetches articles from NewsAPI.org's /everything endpoint
-//  * @query {string} q - The user's search query
-//  */
-// app.get("/api/search", async (req, res) => {
-//   const searchQuery = req.query.q;
-
-//   if (!searchQuery) {
-//     return res.status(400).json({ message: "Search query (q) is required" });
-//   }
-
-//   // Construct the URL for the /everything endpoint
-//   // We add sortBy=popularity and language=en for better results
-//   const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(
-//     searchQuery
-//   )}&sortBy=popularity&language=en&apiKey=${apiKey}`;
-
-//   try {
-//     const response = await axios.get(url);
-//     res.json(response.data);
-//   } catch (error) {
-//     console.error("Error searching news:", error.message);
-//     res.status(500).json({ message: "Error searching news from external API" });
-//   }
-// });
-
-// // Start the server
-// app.listen(PORT, () => {
-//   console.log(`Server is running on http://localhost:${PORT}`);
-//   console.log("Press CTRL+C to stop the server.");
-// });
-
-// Import necessary packages
 import express from "express";
 import axios from "axios";
 import cors from "cors";
@@ -211,12 +121,10 @@ app.post("/api/summarize", async (req, res) => {
 
     if (!articleText) {
       // This can happen on sites that block scraping or use different HTML structures
-      return res
-        .status(500)
-        .json({
-          message:
-            "Could not extract article text. The website might be blocking scrapers or has an unusual format.",
-        });
+      return res.status(500).json({
+        message:
+          "Could not extract article text. The website might be blocking scrapers or has an unusual format.",
+      });
     }
   } catch (scrapeError) {
     console.error("Error scraping URL:", scrapeError.message);
